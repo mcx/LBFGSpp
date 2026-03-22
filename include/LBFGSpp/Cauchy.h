@@ -53,10 +53,10 @@ template <typename Scalar>
 class Cauchy
 {
 private:
-    typedef Eigen::Matrix<Scalar, Eigen::Dynamic, 1> Vector;
-    typedef Eigen::Matrix<int, Eigen::Dynamic, 1> IntVector;
-    typedef Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic> Matrix;
-    typedef std::vector<int> IndexSet;
+    using Vector = Eigen::Matrix<Scalar, Eigen::Dynamic, 1>;
+    using IntVector = Eigen::Matrix<int, Eigen::Dynamic, 1>;
+    using Matrix = Eigen::Matrix<Scalar, Eigen::Dynamic, Eigen::Dynamic>;
+    using IndexSet = std::vector<int>;
 
     // Find the smallest index i such that brk[ord[i]] > t, assuming brk[ord] is already sorted.
     // If the return value equals n, then all values are <= t.
