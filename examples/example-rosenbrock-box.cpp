@@ -13,6 +13,7 @@ class Rosenbrock
 {
 private:
     int n;
+
 public:
     Rosenbrock(int n_) : n(n_) {}
     Scalar operator()(const Vector& x, Vector& grad)

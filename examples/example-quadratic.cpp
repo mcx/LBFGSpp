@@ -2,18 +2,19 @@
 #include <iostream>
 #include <LBFGS.h>
 
-using Eigen::VectorXd;
-using Eigen::MatrixXd;
 using namespace LBFGSpp;
 
-double foo(const VectorXd& x, VectorXd& grad)
+using Scalar = double;
+using Vector = Eigen::Matrix<Scalar, Eigen::Dynamic, 1>;
+
+Scalar quadratic(const Vector& x, Vector& grad)
 {
     const int n = x.size();
-    VectorXd d(n);
-    for(int i = 0; i < n; i++)
+    Vector d(n);
+    for (int i = 0; i < n; i++)
         d[i] = i;
 
-    double f = (x - d).squaredNorm();
+    Scalar f = (x - d).squaredNorm();
     grad.noalias() = 2.0 * (x - d);
     return f;
 }
@@ -21,16 +22,17 @@ double foo(const VectorXd& x, VectorXd& grad)
 int main()
 {
     const int n = 10;
-    LBFGSParam<double> param;
-    LBFGSSolver<double> solver(param);
+    LBFGSParam<Scalar> param;
+    LBFGSSolver<Scalar> solver(param);
 
-    VectorXd x = VectorXd::Zero(n);
-    double fx;
-    int niter = solver.minimize(foo, x, fx);
+    Vector x = Vector::Zero(n);
+    Scalar fx;
+    int niter = solver.minimize(quadratic, x, fx);
 
     std::cout << niter << " iterations" << std::endl;
     std::cout << "x = \n" << x.transpose() << std::endl;
     std::cout << "f(x) = " << fx << std::endl;
+    std::cout << "grad norm = " << solver.final_grad_norm() << std::endl;
 
     return 0;
 }

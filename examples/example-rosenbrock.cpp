@@ -2,23 +2,26 @@
 #include <iostream>
 #include <LBFGS.h>
 
-using Eigen::VectorXf;
-using Eigen::MatrixXf;
 using namespace LBFGSpp;
 
+using Scalar = float;
+using Vector = Eigen::Matrix<Scalar, Eigen::Dynamic, 1>;
+
+// f(x) = (x[0] - 1)^2 + 100 * (x[1] - x[0]^2)^2 +
+//        (x[2] - 1)^2 + 100 * (x[3] - x[2]^2)^2 + ...
 class Rosenbrock
 {
 private:
     int n;
 public:
     Rosenbrock(int n_) : n(n_) {}
-    float operator()(const VectorXf& x, VectorXf& grad)
+    Scalar operator()(const Vector& x, Vector& grad)
     {
-        float fx = 0.0;
-        for(int i = 0; i < n; i += 2)
+        Scalar fx = 0.0;
+        for (int i = 0; i < n; i += 2)
         {
-            float t1 = 1.0 - x[i];
-            float t2 = 10 * (x[i + 1] - x[i] * x[i]);
+            Scalar t1 = 1.0 - x[i];
+            Scalar t2 = 10 * (x[i + 1] - x[i] * x[i]);
             grad[i + 1] = 20 * t2;
             grad[i]     = -2.0 * (x[i] * grad[i + 1] + t1);
             fx += t1 * t1 + t2 * t2;
@@ -30,12 +33,12 @@ public:
 int main()
 {
     const int n = 10;
-    LBFGSParam<float> param;
-    LBFGSSolver<float> solver(param);
+    LBFGSParam<Scalar> param;
+    LBFGSSolver<Scalar> solver(param);
     Rosenbrock fun(n);
 
-    VectorXf x = VectorXf::Zero(n);
-    float fx;
+    Vector x = Vector::Zero(n);
+    Scalar fx;
     int niter = solver.minimize(fun, x, fx);
 
     std::cout << niter << " iterations" << std::endl;
